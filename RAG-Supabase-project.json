@@ -1,0 +1,303 @@
+{
+  "name": "RAG-Latested-sir-zafar",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        432
+      ],
+      "id": "e5dd7a86-931e-4914-aec0-9daf3f35d183",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1dCzx9dhSAK_D_YVUIQ5g_pA08MLDksgv",
+          "mode": "list",
+          "cachedResultName": "Financial-Accounting-Reports-.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1dCzx9dhSAK_D_YVUIQ5g_pA08MLDksgv/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        112,
+        432
+      ],
+      "id": "afd31073-7135-451a-b2b2-a17e1b840cf2",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "erb1RyYtZsfDJgoz",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents1",
+          "mode": "list",
+          "cachedResultName": "documents1"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        432
+      ],
+      "id": "5fa307c3-1e1c-49bd-8415-611455d4ed29",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ZU7ebsMotFBCntAT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        656
+      ],
+      "id": "aed6a24f-1d27-4e06-ae7f-bf2ce0f80d38",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "modelName": "sentence-transformers/all-mpnet-base-v2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsHuggingFaceInference",
+      "typeVersion": 1,
+      "position": [
+        320,
+        640
+      ],
+      "id": "9a292329-d582-4a94-a3cc-f706e6267102",
+      "name": "Embeddings HuggingFace Inference",
+      "credentials": {
+        "huggingFaceApi": {
+          "id": "aCmTUbq9vMDlIeEE",
+          "name": "HuggingFaceApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        32
+      ],
+      "id": "93b1d7fa-1c57-4912-9811-0fa16be9aab0",
+      "name": "When chat message received",
+      "webhookId": "206bf9fb-7785-455f-8b33-6ca0d03746d9"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -176
+      ],
+      "id": "1e5e906d-cc28-4065-8804-981f64058a8f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        48
+      ],
+      "id": "4bf769d6-1e89-4829-bc3c-fec8495420a7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Vgb4npblZrC8j14h",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "give the answer according to the query",
+        "tableName": {
+          "__rl": true,
+          "value": "documents1",
+          "mode": "list",
+          "cachedResultName": "documents1"
+        },
+        "topK": 2,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        -16
+      ],
+      "id": "ae241644-6ac9-4cef-b452-0859f43b7381",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ZU7ebsMotFBCntAT",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        64
+      ],
+      "id": "821a4fac-2c0c-47b9-b22f-b7617cdee7d9",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "YNK8rnAEew3YHPO4",
+          "name": "Unnamed credential"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings HuggingFace Inference": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ede7d4a1-60a8-4a71-a209-48233f643b4f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "285f24a7bee902e085305c3f87b1d692f93a665ead5745bb9d61f4ec9c63de0a"
+  },
+  "id": "3U9Y2VEfcmWoRzCe",
+  "tags": []
+}
